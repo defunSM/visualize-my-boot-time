@@ -5,9 +5,10 @@ import numpy as np
 from bokeh.plotting import *
 import pandas as pd
 
-from bokeh.charts import Donut, show, output_file
+from bokeh.charts import Donut, show, output_file, Histogram, Area
 from bokeh.charts.utils import df_from_json
 from bokeh.sampledata.olympics2014 import data
+
 
 def avgfirmware(times):
 
@@ -54,6 +55,15 @@ def avgtotaltime(times):
 
     return sum(placeholder) / (len(placeholder))
 
+def totalboot(times):
+
+    placeholder = []
+
+    for i in times:
+        placeholder.append(i[4])
+
+    return placeholder
+
 def main():
 
     home = os.path.expanduser("~")
@@ -85,7 +95,6 @@ def main():
     percentk = avgk / avgt
     percentu = avgu / avgt
 
-
     print(times)
     print("AVG FIRMWARE TIME: ", avgf, percentf)
     print("AVG LOADER TIME: ", avgl, percentl)
@@ -106,6 +115,20 @@ def main():
 
     output_file("pie.html")
 
+    mydict = {'Time (s)':totalboot(times)}
+
+    hist = Histogram(pd.DataFrame(mydict), values="Time (s)", title="Total Boot Time (s)", legend="top_right", background_fill_alpha=0.6, bar_width=1)
+
+
+    data = dict(
+        BootTime=totalboot(times)
+        )
+
+    area = Area(data, title="Area Chart", legend="top_left",
+                xlabel='Start Up #', ylabel='Time (s)')
+
+    show(area)
+    show(hist)
     show(p)
 
 if __name__=="__main__":
