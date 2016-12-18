@@ -9,6 +9,7 @@ from bokeh.charts import Donut, show, output_file, Histogram, Area
 from bokeh.charts.utils import df_from_json
 from bokeh.sampledata.olympics2014 import data
 
+import optparse
 
 def avgfirmware(times):
 
@@ -64,6 +65,23 @@ def totalboot(times):
 
     return placeholder
 
+def showArea(times):
+    data = dict(
+        BootTime=totalboot(times)
+    )
+
+    area = Area(data, title="Area Chart", legend="top_left",
+                xlabel='Start Up #', ylabel='Time (s)')
+
+    show(area)
+
+def showHistogram(times):
+    mydict = {'Time (s)':totalboot(times)}
+
+    hist = Histogram(pd.DataFrame(mydict), values="Time (s)", title="Total Boot Time (s)", legend="top_right", background_fill_alpha=0.6, bar_width=1)
+
+    show(hist)
+
 def main():
 
     home = os.path.expanduser("~")
@@ -115,21 +133,31 @@ def main():
 
     output_file("pie.html")
 
-    mydict = {'Time (s)':totalboot(times)}
 
-    hist = Histogram(pd.DataFrame(mydict), values="Time (s)", title="Total Boot Time (s)", legend="top_right", background_fill_alpha=0.6, bar_width=1)
+    p = optparse.OptionParser()
+    p.add_option('--displayall', '-a', default=False)
+    p.add_option('--showAreaPlot', '-p', default=False)
+    p.add_option('--showHistogram', '-g', default=False)
+    p.add_option('--showPieGraph', '-i', default=False)
+
+    options, arguments = p.parse_args()
+
+    if options.displayall != False:
+            showArea(times)
+            showHistogram(times)
+            show(p)
+            return 1
+
+    if options.showAreaPlot != False:
+        showArea(times)
+
+    if options.showHistogram !=False:
+        showHistogram(times)
+
+    if options.showPieGraph !=False:
+        show(p)
 
 
-    data = dict(
-        BootTime=totalboot(times)
-        )
-
-    area = Area(data, title="Area Chart", legend="top_left",
-                xlabel='Start Up #', ylabel='Time (s)')
-
-    show(area)
-    show(hist)
-    show(p)
 
 if __name__=="__main__":
     main()
