@@ -82,6 +82,16 @@ def showHistogram(times):
 
     show(hist)
 
+def showLineGraph(times):
+
+    x = figure(plot_width=800, plot_height=800)
+    counter = 0
+    for i in times:
+        x.circle([1, 2, 3, 4, 5], i, size=10, alpha=0.5)
+        counter += 1
+
+    show(x)
+
 def main():
 
     home = os.path.expanduser("~")
@@ -139,6 +149,7 @@ def main():
     p.add_option('--showAreaPlot', '-p', default=False)
     p.add_option('--showHistogram', '-g', default=False)
     p.add_option('--showPieGraph', '-i', default=False)
+    p.add_option('--showLineGraph', '-l', default=False)
 
     options, arguments = p.parse_args()
 
@@ -151,11 +162,14 @@ def main():
     if options.showAreaPlot != False:
         showArea(times)
 
-    if options.showHistogram !=False:
+    if options.showHistogram != False:
         showHistogram(times)
 
-    if options.showPieGraph !=False:
+    if options.showPieGraph != False:
         show(p)
+
+    if options.showLineGraph != False:
+        showLineGraph(times)
 
 
 
