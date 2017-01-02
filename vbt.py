@@ -100,17 +100,22 @@ def main():
 
     file = open(home+"/time.txt", "r")
     for i in file.read().split("\n"):
+
+        empty_array = []
+
         try:
             m = re.findall("[-+]?\d*\.\d+|\d+", i)
 
             if m:
-                times.append(m)
+                for i in m:
+                    empty_array.append(float(i))
+
+                times.append(empty_array)
 
         except AttributeError:
             pass
 
-    times = np.array(times, dtype='|S4')
-    times = times.astype(np.float)
+    print(times)
 
     avgf = avgfirmware(times)
     avgl = avgloader(times)
